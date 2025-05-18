@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentacion Api Rest</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+</head>
+<body class="bg-light text-dark d-flex flex-column min-vh-100">
+
+    <header class="bg-dark bg-gradient text-white py-4 mb-4 shadow">
+        <div class="container">
+            <h1 class="display-5 fw-bold">Documentación de la API REST – Excusas Creativas</h1>
+            <p class="lead"></p>
+        </div>
+    </header>
+
+    <main class="container flex-grow-1">
+        <section class="mb-4">
+            <h2 class="h4">Introducción</h2>
+            <p>
+                ¿Llegaste tarde? ¿Te olvidaste de entregar algo? ¿Querés zafar de una reunión sin quedar mal? Tranquilo, tenemos la solución.
+                Excusas Creativas es una API desarrollada con Node.js, Express y MongoDB que permite generar y gestionar excusas originales, divertidas y con distintos niveles de credibilidad para ayudarte a salir de cualquier situación incómoda.
+            </p>
+        </section>
+
+        <section>
+            <h2 class="h4">Endpoints de Excusas</h2>
+            <ul class="list-group">
+              <li class="list-group-item">
+                <span class="badge bg-success">GET</span> <a href="/api/excusas"><code class="text-primary-emphasis">/api/excusas</code></a>: Obtiene el listado completo de excusas.
+              </li>
+              <li class="list-group-item">
+                <span class="badge bg-success">GET</span> <a href=""></a><code class="text-primary-emphasis">/api/excusas/:id</code>: Obtiene una excusa específica por su ID.
+              </li>
+              <li class="list-group-item">
+                <span class="badge bg-primary">POST</span> <code class="text-primary-emphasis">/api/excusas</code>: Crea una nueva excusa.
+              </li>
+              <li class="list-group-item">
+                <span class="badge bg-warning text-dark">PUT</span> <code class="text-primary-emphasis">/api/excusas/:id</code>: Actualiza una excusa existente.
+              </li>
+              <li class="list-group-item">
+                <span class="badge bg-danger">DELETE</span> <code class="text-primary-emphasis">/api/excusas/:id</code>: Elimina una excusa.
+              </li>
+              <li class="list-group-item">
+                <span class="badge bg-success">GET</span> <code class="text-primary-emphasis">/api/excusas?credibilidad=alta</code>: Filtra por nivel de credibilidad (alta, media, baja)
+              </li>
+              <li class="list-group-item">
+                <span class="badge bg-success">GET</span> <code class="text-primary-emphasis">/api/excusas?contexto=trabajo</code>: Filtra por contexto (trabajo, universidad, familia, amigos, pareja)
+              </li>
+              <li class="list-group-item">
+                <span class="badge bg-success">GET</span> <code class="text-primary-emphasis">/api/excusas?texto=abuela</code>: Búsqueda por contenido del texto.
+              </li>
+            </ul>
+          </section>
+          <section class="mt-4 mb-4">
+            <h2 class="h4">Endpoints de Contextos</h2>
+            <ul class="list-group">
+              <li class="list-group-item">
+                <span class="badge bg-success">GET</span>
+                <a href="/api/contextos"><code class="text-primary-emphasis">/api/contextos</code></a>: Obtiene el listado completo de contextos disponibles.
+              </li>
+              <li class="list-group-item">
+                <span class="badge bg-success">GET</span>
+                <code class="text-primary-emphasis">/api/contextos/:id</code>: Obtiene un contexto específico por su ID.
+              </li>
+              <li class="list-group-item">
+                <span class="badge bg-primary">POST</span>
+                <code class="text-primary-emphasis">/api/contextos</code>: Crea un nuevo contexto.
+              </li>
+              <li class="list-group-item">
+                <span class="badge bg-danger">DELETE</span>
+                <code class="text-primary-emphasis">/api/contextos/:id</code>: Elimina un contexto existente por ID.
+              </li>
+            </ul>
+          </section>
+
+    </main>
+    <footer class="bg-dark bg-gradient text-white py-4 mt-4">
+        <div class="container text-center">
+            <p class="mb-0">Desarrollado por Giuly Candido Machado - Aplicaciones Híbridas - Profesor: Jonathan Emanuel Cruz - dwt4av</p>
+        </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
