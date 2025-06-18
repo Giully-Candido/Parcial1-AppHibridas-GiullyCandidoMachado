@@ -2,11 +2,14 @@ import express from 'express';
 import routerApiExcusas from './routers/index.js';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import cors from 'cors';
 
 dotenv.config();
 
 const port = process.env.PORT
 const app = express();
+
+app.use(cors()); // Permitir solicitudes CORS, permite que el frontend se comunique con el backend, mismo estando en puertos diferentes
 app.use(express.json());
 app.use(express.static('public')); //devolver archivos estáticos 
 

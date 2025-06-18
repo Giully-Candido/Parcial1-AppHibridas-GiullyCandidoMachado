@@ -103,7 +103,8 @@ const setExcusas = async (req, res) => {
     const nuevaExcusa = await Excusa.create({
       texto,
       credibilidad: credibilidad.toLowerCase(),
-      contexto: contexto.toLowerCase()
+      contexto: contexto.toLowerCase(),
+      usuarioId: req.user.id,
     });
 
     res.status(201).json({
@@ -228,9 +229,26 @@ const deleteExcusa = async (req, res) => {
   }
 };
 
+const getMisExcusas = async (req, res) => {
+  try {
+    const misExcusas = await Excusa.find({ usuarioId: req.user.id });
+    res.status(200).json({
+      status: "success",
+      data: misExcusas,
+      message: "Excusas del usuario obtenidas"
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message
+    });
+  }
+};
+
 export {
   getExcusas,
   setExcusas,
+  getMisExcusas,
   updateExcusa,
   getExcusaById,
   deleteExcusa
