@@ -7,7 +7,7 @@
 
 // ¿Qué hace el middleware?
 // Antes:
-// Cuando creabas una excusa, el backend no sabía quién eras porque no verificaba el token ni agregaba el usuario a la petición.
+// Cuando creabas una excusa (frontend), el backend no sabía quién eras porque no verificaba el token ni agregaba el usuario a la petición.
 // Por eso, req.user era undefined y daba error al intentar leer req.user.id.
 
 // Ahora:
