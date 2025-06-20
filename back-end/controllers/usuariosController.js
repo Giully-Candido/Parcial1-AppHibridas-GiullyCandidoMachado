@@ -21,15 +21,22 @@ export const register = async (req, res) => {
     // Verifica si el usuario ya existe
     const existeUsuario = await Usuario.findOne({ email });
     if (existeUsuario) {
-      return res.status(400).json({ message: 'El email ya está registrado' });
+      return res.status(400).json({ 
+        status: 'error',
+        message: 'El email ya está registrado' 
+      });
     }
     // Encripta la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
     const nuevoUsuario = new Usuario({ nombre, email, password: hashedPassword });
     await nuevoUsuario.save();
-    res.status(201).json({ message: 'Usuario registrado correctamente' });
+    res.status(201).json({
+      status: 'success', 
+      message: 'Usuario registrado correctamente' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ 
+      status: "error",
+      message: error.message });
   }
 };
 
@@ -38,16 +45,27 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     const usuario = await Usuario.findOne({ email });
     if (!usuario) {
-      return res.status(400).json({ message: 'Credenciales inválidas' });
+      return res.status(400).json({ 
+        status: 'error',
+        message: 'Credenciales inválidas',
+      });
     }
     const passwordValida = await bcrypt.compare(password, usuario.password);
     if (!passwordValida) {
-      return res.status(400).json({ message: 'Credenciales inválidas' });
+      return res.status(400).json({ 
+        status: 'error',
+        message: 'Credenciales inválidas',
+       });
     }
     // Genera el token JWT
     const token = jwt.sign({ id: usuario._id, email: usuario.email }, process.env.JWT_SECRET, { expiresIn: '2h' });
-    res.status(200).json({ token, usuario: { id: usuario._id, nombre: usuario.nombre, email: usuario.email } });
+    res.status(200).json({ 
+      status: 'success',
+      token, 
+      usuario: { id: usuario._id, nombre: usuario.nombre, email: usuario.email } });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ 
+      status: "error",
+      message: error.message });
   }
 };

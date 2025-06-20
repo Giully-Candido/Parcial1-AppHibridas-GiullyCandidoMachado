@@ -245,11 +245,29 @@ const getMisExcusas = async (req, res) => {
   }
 };
 
+const getExcusasPorContexto = async (req, res) => {
+  try {
+    const { nombre } = req.params;
+    const excusas = await Excusa.find({ contexto: nombre });
+    res.status(200).json({ 
+      status: 'success', 
+      data: excusas,
+      message: `Excusas obtenidas para el contexto: ${nombre}`
+     });
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'error', 
+      message: error.message 
+    });
+  }
+};
+
 export {
   getExcusas,
   setExcusas,
   getMisExcusas,
   updateExcusa,
   getExcusaById,
-  deleteExcusa
+  deleteExcusa,
+  getExcusasPorContexto,
 };

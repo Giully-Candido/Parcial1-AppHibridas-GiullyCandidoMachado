@@ -1,8 +1,10 @@
 import { useEffect, useState, useRef } from 'react';
 import { getMisExcusas, borrarExcusa, editarExcusa } from '../services/excusaService';
+import { getContextos } from '../services/contextoService';
 
 function MisExcusas() {
   const [excusas, setExcusas] = useState([]);
+  const [opcionesContexto, setOpcionesContexto] = useState([]);
   const [mensaje, setMensaje] = useState('');
   const [editandoId, setEditandoId] = useState(null);
   const [formEdit, setFormEdit] = useState({ texto: '', credibilidad: '', contexto: '' });
@@ -16,7 +18,13 @@ function MisExcusas() {
   useEffect(() => {
     getMisExcusas(token)
       .then(data => setExcusas(data.data || []));
-  }, [token]);
+    getContextos()
+    .then(data => {
+      // Si data.data existe y es un array, úsalo; si no, usa []
+      setOpcionesContexto(Array.isArray(data.data) ? data.data : []);
+    })
+    .catch(() => setOpcionesContexto([]));
+}, [token]);
 
   // Mostrar toast cuando cambia el mensaje
   useEffect(() => {
@@ -180,11 +188,21 @@ function MisExcusas() {
                   <option value="alta">Alta</option>
                 </select>
                 <select name="contexto" value={formEdit.contexto} onChange={manejarCambio} className="form-select" required disabled={loading}>
-                  <option value="trabajo">Trabajo</option>
-                  <option value="universidad">Universidad</option>
-                  <option value="familia">Familia</option>
-                  <option value="amigos">Amigos</option>
-                  <option value="pareja">Pareja</option>
+                  {opcionesContexto.length === 0 ? (
+                    <option value="">No hay contextos disponibles</option>
+                  ) : (
+                    opcionesContexto.map((opcion) =>
+                      typeof opcion === 'string' ? (
+                        <option key={opcion} value={opcion}>
+                          {opcion.charAt(0).toUpperCase() + opcion.slice(1)}
+                        </option>
+                      ) : (
+                        <option key={opcion._id || opcion.nombre} value={opcion.nombre}>
+                          {opcion.nombre.charAt(0).toUpperCase() + opcion.nombre.slice(1)}
+                        </option>
+                      )
+                    )
+                  )}
                 </select>
                 <button type="submit" className="btn btn-success btn-sm" disabled={loading}>
                   {loading ? 'Guardando...' : 'Guardar'}

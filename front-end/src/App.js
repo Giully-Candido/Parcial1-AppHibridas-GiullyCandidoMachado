@@ -6,12 +6,16 @@ import RutasPrivadas from './components/RutasPrivadas';
 import Header from './components/Header';
 import Inicio from './components/Inicio';
 import MisExcusas from './components/MisExcusas';
+import LandingPage from './components/LandingPage';
+import ExcusasPorContexto from './components/ExcusasPorContexto';
 
 function App() {
   return (
     <BrowserRouter>
       <Header />
       <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/contexto/:nombre" element={<ExcusasPorContexto />} />
         <Route path="/registro" element={<Registro />} />
         <Route path="/login" element={<Login />} />
         <Route

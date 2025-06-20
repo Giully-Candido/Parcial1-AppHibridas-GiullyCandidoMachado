@@ -1,5 +1,5 @@
 import express from 'express';
-import {getExcusas, setExcusas, updateExcusa, getExcusaById, deleteExcusa, getMisExcusas} from '../controllers/excusasController.js';
+import {getExcusas, setExcusas, updateExcusa, getExcusaById, deleteExcusa, getMisExcusas, getExcusasPorContexto} from '../controllers/excusasController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
@@ -10,5 +10,6 @@ router.post('/', authMiddleware, setExcusas); // Agregar una nueva excusa (prote
 router.put('/:id', updateExcusa); // Actualizar una excusa por ID 
 router.get('/:id', getExcusaById); // Obtener una excusa por ID
 router.delete('/:id', deleteExcusa); // Eliminar una excusa por ID
+router.get('/contexto/:nombre', getExcusasPorContexto);
 // Exportar el router para usarlo en el archivo principal
 export default router;

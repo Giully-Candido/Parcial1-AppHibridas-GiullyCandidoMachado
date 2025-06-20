@@ -5,27 +5,35 @@ import { loginUsuario } from '../services/usuarioService';
 function Login() {
   const [formulario, setFormulario] = useState({ email: '', password: '' });
   const [mensaje, setMensaje] = useState('');
+  const [tipoMensaje, setTipoMensaje] = useState('success'); // 'success' o 'error'
   const navigate = useNavigate();
 
   const manejarCambio = (e) => {
     setFormulario({ ...formulario, [e.target.name]: e.target.value });
+    setMensaje('');
+    setTipoMensaje('success');
   };
 
   const manejarEnvio = async (e) => {
     e.preventDefault();
     setMensaje('');
+    setTipoMensaje('success');
+
     try {
       const datos = await loginUsuario(formulario);
-      if (datos.token) {
+      if (datos.status === 'success' && datos.token) {
+        setTipoMensaje('success');
         setMensaje('¡Login exitoso! Redirigiendo...');
         localStorage.setItem('token', datos.token);
         setTimeout(() => {
           navigate('/inicio'); 
         }, 1500);
       } else {
+        setTipoMensaje('error');
         setMensaje(datos.message || 'Credenciales incorrectas');
       }
     } catch (error) {
+      setTipoMensaje('error');
       setMensaje('Error de conexión con el servidor');
     }
   };
@@ -45,7 +53,7 @@ function Login() {
               placeholder="Ingresá tu email"
               value={formulario.email}
               onChange={manejarCambio}
-              required
+             
             />
           </div>
           <div className="mb-3">
@@ -58,12 +66,15 @@ function Login() {
               placeholder="Ingresá tu contraseña"
               value={formulario.password}
               onChange={manejarCambio}
-              required
             />
           </div>
           <button type="submit" className="btn btn-primary w-100">Ingresar</button>
         </form>
-        {mensaje && <p className="mt-3 text-center text-danger">{mensaje}</p>}
+        {mensaje && (
+          <div className={`alert ${tipoMensaje === 'error' ? 'alert-danger' : 'alert-success'} mt-3 text-center`} role="alert">
+            {mensaje}
+          </div>
+        )}
         <div className="mt-3 text-center">
           <span>¿No tenés cuenta? </span>
           <Link to="/registro">Crear una cuenta</Link>
