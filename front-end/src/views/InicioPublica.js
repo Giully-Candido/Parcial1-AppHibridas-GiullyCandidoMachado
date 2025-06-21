@@ -8,7 +8,7 @@ function LandingPage() {
 
   useEffect(() => {
   getContextos().then(data => {
-    console.log('Contextos recibidos en el frontend:', data);
+    //console.log('Contextos recibidos en el frontend:', data);
     setContextos(data.data || []);
   });
 }, []);

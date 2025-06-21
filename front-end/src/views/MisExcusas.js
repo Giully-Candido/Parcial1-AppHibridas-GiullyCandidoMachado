@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { getMisExcusas, borrarExcusa, editarExcusa } from '../services/excusaService';
 import { getContextos } from '../services/contextoService';
+import MenuCategorias from '../components/MenuCategorias';
 
 function MisExcusas() {
   const [excusas, setExcusas] = useState([]);
@@ -12,6 +13,7 @@ function MisExcusas() {
   const [toastVisible, setToastVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [excusaABorrar, setExcusaABorrar] = useState(null);
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('todas');
   const token = localStorage.getItem('token');
   const toastTimeout = useRef();
 
@@ -19,12 +21,11 @@ function MisExcusas() {
     getMisExcusas(token)
       .then(data => setExcusas(data.data || []));
     getContextos()
-    .then(data => {
-      // Si data.data existe y es un array, úsalo; si no, usa []
-      setOpcionesContexto(Array.isArray(data.data) ? data.data : []);
-    })
-    .catch(() => setOpcionesContexto([]));
-}, [token]);
+      .then(data => {
+        setOpcionesContexto(Array.isArray(data.data) ? data.data : []);
+      })
+      .catch(() => setOpcionesContexto([]));
+  }, [token]);
 
   // Mostrar toast cuando cambia el mensaje
   useEffect(() => {
@@ -112,9 +113,20 @@ function MisExcusas() {
     setLoading(false);
   };
 
+  // Filtrar excusas por contexto seleccionado
+  const excusasFiltradas = categoriaSeleccionada === 'todas'
+    ? excusas
+    : excusas.filter(e => e.contexto === categoriaSeleccionada);
+
   return (
     <div className="container py-5">
       <h2>Mis Excusas</h2>
+
+      {/* Menú de categorías para filtrar */}
+      <MenuCategorias
+        categoriaSeleccionada={categoriaSeleccionada}
+        setCategoriaSeleccionada={setCategoriaSeleccionada}
+      />
 
       {/* Toast Bootstrap */}
       <div
@@ -168,66 +180,73 @@ function MisExcusas() {
         </>
       )}
 
-      <ul className="list-group">
-        {excusas.map(excusa => (
-          <li key={excusa._id} className="list-group-item d-flex justify-content-between align-items-center">
-            {editandoId === excusa._id ? (
-              <form className="w-100 d-flex flex-column flex-md-row gap-2 align-items-center"
-                onSubmit={e => { e.preventDefault(); guardarEdicion(excusa._id); }}>
-                <input
-                  type="text"
-                  name="texto"
-                  value={formEdit.texto}
-                  onChange={manejarCambio}
-                  className="form-control"
-                  disabled={loading}
-                />
-                <select name="credibilidad" value={formEdit.credibilidad} onChange={manejarCambio} className="form-select" required disabled={loading}>
-                  <option value="baja">Baja</option>
-                  <option value="media">Media</option>
-                  <option value="alta">Alta</option>
-                </select>
-                <select name="contexto" value={formEdit.contexto} onChange={manejarCambio} className="form-select" required disabled={loading}>
-                  {opcionesContexto.length === 0 ? (
-                    <option value="">No hay contextos disponibles</option>
-                  ) : (
-                    opcionesContexto.map((opcion) =>
-                      typeof opcion === 'string' ? (
-                        <option key={opcion} value={opcion}>
-                          {opcion.charAt(0).toUpperCase() + opcion.slice(1)}
-                        </option>
-                      ) : (
-                        <option key={opcion._id || opcion.nombre} value={opcion.nombre}>
-                          {opcion.nombre.charAt(0).toUpperCase() + opcion.nombre.slice(1)}
-                        </option>
+      {/* Mensaje si no hay excusas */}
+      {excusasFiltradas.length === 0 ? (
+        <div className="alert alert-info text-center">
+          No tenés ninguna excusa agregada para este contexto. ¡Agregá una excusa!
+        </div>
+      ) : (
+        <ul className="list-group">
+          {excusasFiltradas.map(excusa => (
+            <li key={excusa._id} className="list-group-item d-flex justify-content-between align-items-center">
+              {editandoId === excusa._id ? (
+                <form className="w-100 d-flex flex-column flex-md-row gap-2 align-items-center"
+                  onSubmit={e => { e.preventDefault(); guardarEdicion(excusa._id); }}>
+                  <input
+                    type="text"
+                    name="texto"
+                    value={formEdit.texto}
+                    onChange={manejarCambio}
+                    className="form-control"
+                    disabled={loading}
+                  />
+                  <select name="credibilidad" value={formEdit.credibilidad} onChange={manejarCambio} className="form-select" required disabled={loading}>
+                    <option value="baja">Baja</option>
+                    <option value="media">Media</option>
+                    <option value="alta">Alta</option>
+                  </select>
+                  <select name="contexto" value={formEdit.contexto} onChange={manejarCambio} className="form-select" required disabled={loading}>
+                    {opcionesContexto.length === 0 ? (
+                      <option value="">No hay contextos disponibles</option>
+                    ) : (
+                      opcionesContexto.map((opcion) =>
+                        typeof opcion === 'string' ? (
+                          <option key={opcion} value={opcion}>
+                            {opcion.charAt(0).toUpperCase() + opcion.slice(1)}
+                          </option>
+                        ) : (
+                          <option key={opcion._id || opcion.nombre} value={opcion.nombre}>
+                            {opcion.nombre.charAt(0).toUpperCase() + opcion.nombre.slice(1)}
+                          </option>
+                        )
                       )
-                    )
-                  )}
-                </select>
-                <button type="submit" className="btn btn-success btn-sm" disabled={loading}>
-                  {loading ? 'Guardando...' : 'Guardar'}
-                </button>
-                <button type="button" className="btn btn-secondary btn-sm" onClick={() => setEditandoId(null)} disabled={loading}>
-                  Cancelar
-                </button>
-              </form>
-            ) : (
-              <>
-                <span>
-                  <strong>{excusa.texto}</strong>
-                  <br />
-                  <span className="badge bg-secondary me-2">Credibilidad: {excusa.credibilidad}</span>
-                  <span className="badge bg-info text-dark">Contexto: {excusa.contexto}</span>
-                </span>
-                <span>
-                  <button className="btn btn-warning btn-sm me-2" onClick={() => empezarEdicion(excusa)} disabled={loading}>Editar</button>
-                  <button className="btn btn-danger btn-sm" onClick={() => pedirConfirmacionBorrado(excusa)} disabled={loading}>Borrar</button>
-                </span>
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
+                    )}
+                  </select>
+                  <button type="submit" className="btn btn-success btn-sm" disabled={loading}>
+                    {loading ? 'Guardando...' : 'Guardar'}
+                  </button>
+                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => setEditandoId(null)} disabled={loading}>
+                    Cancelar
+                  </button>
+                </form>
+              ) : (
+                <>
+                  <span>
+                    <strong>{excusa.texto}</strong>
+                    <br />
+                    <span className="badge bg-secondary me-2">Credibilidad: {excusa.credibilidad}</span>
+                    <span className="badge bg-info text-dark">Contexto: {excusa.contexto}</span>
+                  </span>
+                  <span>
+                    <button className="btn btn-warning btn-sm me-2" onClick={() => empezarEdicion(excusa)} disabled={loading}>Editar</button>
+                    <button className="btn btn-danger btn-sm" onClick={() => pedirConfirmacionBorrado(excusa)} disabled={loading}>Borrar</button>
+                  </span>
+                </>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

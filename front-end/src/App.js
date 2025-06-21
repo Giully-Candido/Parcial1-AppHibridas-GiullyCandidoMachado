@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Registro from './components/Registro';
-import Login from './components/Login';
+import Registro from './views/Registro';
+import Login from './views/Login';
 import CrearExcusa from './components/CrearExcusa';
 import RutasPrivadas from './components/RutasPrivadas';
 import Header from './components/Header';
-import Inicio from './components/Inicio';
-import MisExcusas from './components/MisExcusas';
-import LandingPage from './components/LandingPage';
-import ExcusasPorContexto from './components/ExcusasPorContexto';
+import Inicio from './views/Inicio';
+import MisExcusas from './views/MisExcusas';
+import LandingPage from './views/InicioPublica';
+import ExcusasPorContexto from './views/ExcusasPorContexto';
 
 function App() {
   return (

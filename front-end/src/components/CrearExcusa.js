@@ -19,8 +19,12 @@ function CrearExcusa({ onExcusaCreada }) {
     // Traer contextos del backend 
     getContextos()
       .then(data => {
+        //console.log('Contextos recibidos:', data);
         setOpcionesContexto(Array.isArray(data.data) ? data.data : []);
-        setFormulario(f => ({ ...f, contexto: (Array.isArray(data.data) && data.data[0]) ? data.data[0] : '' }));
+        setFormulario(f => ({
+          ...f,
+          contexto: (Array.isArray(data.data) && data.data[0]?.nombre) ? data.data[0].nombre : ''
+        }));
       })
       .catch(() => setOpcionesContexto([]));
   }, []);
@@ -29,6 +33,7 @@ function CrearExcusa({ onExcusaCreada }) {
     setFormulario({ ...formulario, [e.target.name]: e.target.value });
     setMensaje('');
     setTipoMensaje('success');
+    
   };
 
   const manejarEnvio = async (e) => {

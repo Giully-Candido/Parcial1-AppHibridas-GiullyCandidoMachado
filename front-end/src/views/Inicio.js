@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import CrearExcusa from './CrearExcusa';
-import MenuCategorias from './MenuCategorias';
-import ListaExcusas from './ListaExcusas';
+import CrearExcusa from '../components/CrearExcusa';
+import MenuCategorias from '../components/MenuCategorias';
+import ListaExcusas from '../components/ListaExcusas';
 import { getExcusas, getExcusasOrdenadas } from '../services/excusaService';
 
 function Inicio() {
@@ -16,8 +16,9 @@ function Inicio() {
   }, []);
 
   const agregarExcusa = (nuevaExcusa) => {
-    setExcusas(prev => [nuevaExcusa, ...prev]);
-  };
+  console.log('Intentando agregar excusa:', nuevaExcusa);
+  setExcusas(prev => [nuevaExcusa, ...prev]);
+};
 
   const excusasFiltradas = categoriaSeleccionada === 'todas'
     ? excusas
